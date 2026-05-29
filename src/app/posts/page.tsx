@@ -1,5 +1,8 @@
 import Link from 'next/link';
-import { posts } from '@/data/posts';
+import {
+    getAllPosts,
+    getFilteredPosts,
+} from '@/data/queries';
 
 export default async function Posts({
     searchParams,
@@ -11,12 +14,8 @@ export default async function Posts({
     const criteria = (await searchParams).criteria;
     const resolvedPosts =
         typeof criteria === 'string'
-            ? posts.filter((post) =>
-                post.title
-                    .toLowerCase()
-                    .includes(criteria.toLowerCase()),
-            )
-            : posts;
+            ? await getFilteredPosts(criteria)
+            : await getAllPosts();
     const resolvedHeading =
         typeof criteria === 'string'
             ? `Posts for ${criteria}`
