@@ -4,8 +4,16 @@
 import { createClient } from "@libsql/client";
 import { postSchema, postsSchema } from "./schema";
 
+async function delay() {
+    await new Promise((resolve) =>
+        setTimeout(resolve, 1000));
+}
+
 // Function to get all posts from the database.
 export async function getAllPosts() {
+    // Simulate a delay
+    await delay();
+
     // Connect to the database
     const client = createClient({
         url: process.env.DB_URL ?? '',
@@ -22,6 +30,8 @@ export async function getAllPosts() {
 
 // Function to get a single post by id from the database
 export async function getPost(id: number) {
+    // Simulate a delay
+    await delay();
     const client = createClient({
         url: process.env.DB_URL ?? '',
     });
@@ -43,6 +53,8 @@ export async function getPost(id: number) {
 
 // Function to get filtered posts from the database
 export async function getFilteredPosts(criteria: string) {
+    // Simulate a delay
+    await delay();
     const client = createClient({
         url: process.env.DB_URL ?? '',
     });

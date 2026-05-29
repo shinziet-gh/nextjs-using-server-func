@@ -1,8 +1,6 @@
-import Link from 'next/link';
-import {
-    getAllPosts,
-    getFilteredPosts,
-} from '@/data/queries';
+import { Suspense } from 'react';
+import { Loading } from '@/components/Loading';
+import { PostList } from '@/components/PostList';
 
 export default async function Posts({
     searchParams,
@@ -11,11 +9,9 @@ export default async function Posts({
         [key: string]: string | string[] | undefined;
     }>;
 }) {
+    // Use searchParams to get the criteria for filtering posts
     const criteria = (await searchParams).criteria;
-    const resolvedPosts =
-        typeof criteria === 'string'
-            ? await getFilteredPosts(criteria)
-            : await getAllPosts();
+
     const resolvedHeading =
         typeof criteria === 'string'
             ? `Posts for ${criteria}`
@@ -24,16 +20,9 @@ export default async function Posts({
     return (
         <main>
             <h2>{resolvedHeading}</h2>
-            <ul>
-                {resolvedPosts.map((post) => (
-                    <li key={post.id}>
-                        <Link href={`/posts/${post.id}`}>
-                            {post.title}
-                        </Link>
-                        <p>{post.description}</p>
-                    </li>
-                ))}
-            </ul>
+            <Suspense fallback={<Loading />}>
+                <PostList criteria={criteria} />
+            </Suspense>
         </main>
     );
 }

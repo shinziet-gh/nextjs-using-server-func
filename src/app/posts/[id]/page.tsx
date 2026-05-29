@@ -1,5 +1,7 @@
-import { getPost } from '@/data/queries';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import { Loading } from '@/components/Loading';
+import PostDetail from '@/components/PostDetail';
 
 export default async function Post({
     params,
@@ -10,15 +12,12 @@ export default async function Post({
     if (!Number.isInteger(id)) {
         notFound();
     }
-    const post = await getPost(id);
-    if (!post) {
-        notFound();
-    }
 
     return (
         <main>
-            <h2>{post.title}</h2>
-            <p>{post.description}</p>
+            <Suspense fallback={<Loading />}>
+                <PostDetail id={id} />
+            </Suspense>
         </main>
     );
 }
