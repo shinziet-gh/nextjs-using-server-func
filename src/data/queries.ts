@@ -2,13 +2,7 @@
 // This file contains functions to connect and query the database.
 
 import { createClient } from "@libsql/client";
-
-// Post type data structure returned from the function query.
-type Post = {
-    id: number;
-    title: string;
-    description: string;
-}
+import { postSchema, postsSchema } from "./schema";
 
 // Function to get all posts from the database.
 export async function getAllPosts() {
@@ -23,7 +17,7 @@ export async function getAllPosts() {
     });
 
     client.close();
-    return data.rows as unknown as Post[];
+    return postsSchema.parse(data.rows);
 }
 
 // Function to get a single post by id from the database
@@ -44,7 +38,7 @@ export async function getPost(id: number) {
         return undefined;
     }
 
-    return data.rows[0] as unknown as Post;
+    return postSchema.parse(data.rows[0]);
 }
 
 // Function to get filtered posts from the database
@@ -59,5 +53,5 @@ export async function getFilteredPosts(criteria: string) {
     });
 
     client.close();
-    return data.rows as unknown as Post[];
+    return postsSchema.parse(data.rows);
 }
